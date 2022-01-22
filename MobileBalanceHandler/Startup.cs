@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MobileBalanceHandler.Models.Data;
 
 namespace MobileBalanceHandler
 {
@@ -24,6 +27,8 @@ namespace MobileBalanceHandler
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {Title = "MobileBalanceHandler", Version = "v1"});
             });
+            string connection = Configuration.GetConnectionString("Connection");
+            services.AddDbContext<MobileBalanceContext>(o => o.UseSqlite(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
