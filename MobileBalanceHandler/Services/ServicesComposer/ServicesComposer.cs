@@ -5,6 +5,7 @@ using MobileBalanceHandler.Models;
 using MobileBalanceHandler.Services.CarrierServices;
 using MobileBalanceHandler.Services.PaymentServices;
 using MobileBalanceHandler.Services.RequestHandlerServices;
+using NLog;
 
 namespace MobileBalanceHandler.Services.ServicesComposer
 {
@@ -12,6 +13,7 @@ namespace MobileBalanceHandler.Services.ServicesComposer
     {
         private readonly ICarrierService _carrierService;
         private readonly IPaymentService _paymentService;
+        private static readonly Logger ErrorLogger = LogManager.GetLogger("errorRules");
 
         public ServicesComposer(ICarrierService carrierService, IPaymentService paymentService)
         {
@@ -38,6 +40,8 @@ namespace MobileBalanceHandler.Services.ServicesComposer
                     }
                     default:
                     {
+                        ErrorLogger.Error($"Произошла ошибка при запросе на пополнение по номеру: {paymentData.PhoneNumber} " +
+                                          $"на сумму {paymentData.Sum} так, как запрос с типом {carrier.RequestType} не может быть обработан");
                         return new HttpResponseMessage()
                         {
                             StatusCode = HttpStatusCode.BadRequest,
@@ -46,6 +50,9 @@ namespace MobileBalanceHandler.Services.ServicesComposer
                     }
                 }
             }
+            
+            ErrorLogger.Error($"Произошла ошибка при запросе на пополнение по номеру: {paymentData.PhoneNumber} " +
+                              $"на сумму {paymentData.Sum} так, как оператор по префиксу {prefix} не был найден");
 
             return new HttpResponseMessage()
             {
@@ -67,6 +74,8 @@ namespace MobileBalanceHandler.Services.ServicesComposer
                 return response;
             }
 
+            ErrorLogger.Error($"Произошла ошибка при запросе на пополнение по номеру: {paymentData.PhoneNumber} " +
+                              $"на сумму {paymentData.Sum} так, как произошла ошибка при отправке POST-запроса по адресу: {url}");
             return new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.BadRequest,

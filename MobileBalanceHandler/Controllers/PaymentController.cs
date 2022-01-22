@@ -26,21 +26,23 @@ namespace MobileBalanceHandler.Controllers
         {
             try
             {
-                InfoLogger.Info($"Поступил запрос на пополнение баланса по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum}");
+                HttpContext.Response.Headers["RequestId"] = Guid.NewGuid().ToString();
+                InfoLogger.Info($"Поступил запрос на пополнение баланса по номеру: {paymentData.PhoneNumber} " +
+                                $"на сумму: {paymentData.Sum} c request id: {HttpContext.Response.Headers["RequestId"]}");
                 var result = await _servicesComposer.ComposeServices(paymentData);
                 if (result.IsSuccessStatusCode)
                 {
-                    InfoLogger.Info($"Платеж по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} принят в обработку");
+                    InfoLogger.Info($"Платеж по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} c request id: {HttpContext.Response.Headers["RequestId"]} принят в обработку");
                     return Ok($"Платеж по номеру {paymentData.PhoneNumber} на сумму {paymentData.Sum} тенге принят в обработку!");
                 }
 
-                InfoLogger.Info($"Возникла следующая ошибка: {await result.Content.ReadAsStringAsync()} при платеже на номер: {paymentData.PhoneNumber} на сумму: {paymentData.Sum}");
+                ErrorLogger.Info($"Возникла следующая ошибка: {await result.Content.ReadAsStringAsync()} по запросу с request id: {HttpContext.Response.Headers["RequestId"]}");
                 return BadRequest(await result.Content.ReadAsStringAsync());
             }
             catch (Exception e)
             {
                 ErrorLogger.Error(
-                    $"При пополнении по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} возникло исключение: {e.Message}");
+                    $"При пополнении по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} с c request id: {HttpContext.Response.Headers["RequestId"]} возникло исключение: {e.Message}");
                 return BadRequest("Возникла непредвиденная ошибка, приносим извинения!");
             }
         }
