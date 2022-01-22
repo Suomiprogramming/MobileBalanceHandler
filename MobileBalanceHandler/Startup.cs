@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using MobileBalanceHandler.Models;
 using MobileBalanceHandler.Models.Data;
 
 namespace MobileBalanceHandler
@@ -29,6 +30,7 @@ namespace MobileBalanceHandler
             });
             string connection = Configuration.GetConnectionString("Connection");
             services.AddDbContext<MobileBalanceContext>(o => o.UseSqlite(connection));
+            services.AddOptions<List<Carrier>>().Bind(Configuration.GetSection(nameof(Carrier))).ValidateDataAnnotations();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
