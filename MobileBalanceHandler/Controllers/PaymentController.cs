@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MobileBalanceHandler.Models;
 using MobileBalanceHandler.Services.ServicesComposer;
+using NLog;
 
 namespace MobileBalanceHandler.Controllers
 {
@@ -11,6 +12,8 @@ namespace MobileBalanceHandler.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IServicesComposer _servicesComposer;
+        private static readonly Logger InfoLogger = LogManager.GetLogger("infoRules");
+        private static readonly Logger ErrorLogger = LogManager.GetLogger("errorRules");
 
         public PaymentController(IServicesComposer servicesComposer)
         {
@@ -23,16 +26,21 @@ namespace MobileBalanceHandler.Controllers
         {
             try
             {
+                InfoLogger.Info($"Поступил запрос на пополнение баланса по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum}");
                 var result = await _servicesComposer.ComposeServices(paymentData);
                 if (result.IsSuccessStatusCode)
                 {
+                    InfoLogger.Info($"Платеж по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} принят в обработку");
                     return Ok($"Платеж по номеру {paymentData.PhoneNumber} на сумму {paymentData.Sum} тенге принят в обработку!");
                 }
-                
+
+                InfoLogger.Info($"Возникла следующая ошибка: {await result.Content.ReadAsStringAsync()} при платеже на номер: {paymentData.PhoneNumber} на сумму: {paymentData.Sum}");
                 return BadRequest(await result.Content.ReadAsStringAsync());
             }
             catch (Exception e)
             {
+                ErrorLogger.Error(
+                    $"При пополнении по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} возникло исключение: {e.Message}");
                 return BadRequest("Возникла непредвиденная ошибка, приносим извинения!");
             }
         }
