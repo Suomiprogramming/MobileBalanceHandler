@@ -25,7 +25,10 @@ namespace MobileBalanceHandler.Services.PaymentServices
             };
             _context.Payments.Add(payment);
             _context.SaveChanges();
-            InfoLogger.Info($"Платеж по номеру {payment.PhoneNumber} на сумму {payment.Sum} , проведенный в {payment.PaymentDate}, с request id: {HttpContext.Response.Headers["RequestId"]} сохранен в базе под id {payment.Id}");
+            if (HttpContext != null && HttpContext.Response.Headers.ContainsKey("RequestId"))
+            {
+                InfoLogger.Info($"Платеж по номеру {payment.PhoneNumber} на сумму {payment.Sum} , проведенный в {payment.PaymentDate}, с request id: {HttpContext.Response.Headers["RequestId"]} сохранен в базе под id {payment.Id}");
+            }
         }
     }
 }
