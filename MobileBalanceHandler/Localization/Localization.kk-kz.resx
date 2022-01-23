@@ -23,4 +23,7 @@
     <data name="responseError" xml:space="preserve">
         <value>Сұраныс жіберілмеді, себебі серверде қате пайда болды</value>
     </data>
+    <data name="failedRequest" xml:space="preserve">
+        <value>Қате пайда болған соң сұраныс сәтті жіберілмеді</value>
+    </data>
 </root>

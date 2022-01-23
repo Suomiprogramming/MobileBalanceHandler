@@ -129,4 +129,7 @@
   <data name="responseError" xml:space="preserve">
     <value>Запрос не был отправлен, произошла ошибка на сервере</value>
   </data>
+  <data name="failedRequest" xml:space="preserve">
+    <value>Возникла ошибка, запрос не был отправлен успешно</value>
+  </data>
 </root>
