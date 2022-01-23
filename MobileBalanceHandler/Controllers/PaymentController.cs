@@ -1,6 +1,8 @@
 using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using MobileBalanceHandler.Models;
 using MobileBalanceHandler.Services.ServicesComposer;
 using NLog;
@@ -14,10 +16,12 @@ namespace MobileBalanceHandler.Controllers
         private readonly IServicesComposer _servicesComposer;
         private static readonly Logger InfoLogger = LogManager.GetLogger("infoRules");
         private static readonly Logger ErrorLogger = LogManager.GetLogger("errorRules");
+        private readonly IStringLocalizer<Localization.Localization> _localizer;
 
-        public PaymentController(IServicesComposer servicesComposer)
+        public PaymentController(IServicesComposer servicesComposer, IStringLocalizer<Localization.Localization> localizer)
         {
             _servicesComposer = servicesComposer;
+            _localizer = localizer;
         }
 
         [HttpPost]
@@ -33,7 +37,10 @@ namespace MobileBalanceHandler.Controllers
                 if (result.IsSuccessStatusCode)
                 {
                     InfoLogger.Info($"Платеж по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} c request id: {HttpContext.Response.Headers["RequestId"]} принят в обработку");
-                    return Ok($"Платеж по номеру {paymentData.PhoneNumber} на сумму {paymentData.Sum} тенге принят в обработку!");
+                    var localizedString = _localizer.GetString("success");
+                    var message = localizedString.Value.Replace("number", paymentData.PhoneNumber);
+                    message = message.Replace("sum", paymentData.Sum.ToString(CultureInfo.InvariantCulture));
+                    return Ok(message);
                 }
                 
                 return BadRequest(await result.Content.ReadAsStringAsync());

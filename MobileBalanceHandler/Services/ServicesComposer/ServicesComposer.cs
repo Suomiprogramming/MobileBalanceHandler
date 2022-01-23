@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Localization;
 using MobileBalanceHandler.Models;
 using MobileBalanceHandler.Services.CarrierServices;
 using MobileBalanceHandler.Services.PaymentServices;
@@ -15,12 +16,17 @@ namespace MobileBalanceHandler.Services.ServicesComposer
         private readonly ICarrierService _carrierService;
         private readonly IPaymentService _paymentService;
         private static readonly Logger ErrorLogger = LogManager.GetLogger("errorRules");
+        private readonly IStringLocalizer<Localization.Localization> _localizer;
         private static HttpContext HttpContext => new HttpContextAccessor().HttpContext;
 
-        public ServicesComposer(ICarrierService carrierService, IPaymentService paymentService)
+        public ServicesComposer(
+            ICarrierService carrierService, 
+            IPaymentService paymentService, 
+            IStringLocalizer<Localization.Localization> localizer)
         {
             _carrierService = carrierService;
             _paymentService = paymentService;
+            _localizer = localizer;
         }
 
         public async Task<HttpResponseMessage> ComposeServices(PaymentData paymentData)
@@ -47,7 +53,7 @@ namespace MobileBalanceHandler.Services.ServicesComposer
                         return new HttpResponseMessage()
                         {
                             StatusCode = HttpStatusCode.BadRequest,
-                            Content = new StringContent("Приносим извинения, произошла ошибка при отправке запроса!")
+                            Content = new StringContent(_localizer.GetString("reqTypeError"))
                         };
                     }
                 }
@@ -59,7 +65,7 @@ namespace MobileBalanceHandler.Services.ServicesComposer
             return new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.BadRequest,
-                Content = new StringContent("Оператора по такому префиксу не существует!")
+                Content = new StringContent(_localizer.GetString("prefixError"))
             };
         }
 
@@ -76,6 +82,7 @@ namespace MobileBalanceHandler.Services.ServicesComposer
                 {
                     ErrorLogger.Error($"Произошла ошибка при запросе на пополнение по номеру: {paymentData.PhoneNumber} " +
                                       $"на сумму {paymentData.Sum} с request id: {HttpContext.Response.Headers["RequestId"]} так, как при отправке POST-запроса по адресу: {url} поступил статус код отличный от 200 с содержимым контента: {await response.Content.ReadAsStringAsync()}");
+                    response.Content = new StringContent(_localizer.GetString("failedRequest"));
                 }
                 
                 return response;
@@ -86,7 +93,7 @@ namespace MobileBalanceHandler.Services.ServicesComposer
             return new HttpResponseMessage()
             {
                 StatusCode = HttpStatusCode.BadRequest,
-                Content = new StringContent("Запрос не был отправлен, произошла ошибка на сервере!")
+                Content = new StringContent(_localizer.GetString("responseError"))
             };
         }
     }
