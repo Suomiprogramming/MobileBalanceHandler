@@ -15,6 +15,7 @@ namespace MobileBalanceHandler.Extensions
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ICarrierService, CarrierService>();
             services.AddTransient<IServicesComposer, ServicesComposer>();
+            services.AddHttpContextAccessor();
         }
     }
 }
