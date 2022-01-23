@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,9 +33,26 @@ namespace MobileBalanceHandler
             });
             string connection = Configuration.GetConnectionString("Connection");
             services.AddDbContext<MobileBalanceContext>(o => o.UseSqlite(connection));
-            services.AddOptions<List<Carrier>>().Bind(Configuration.GetSection(nameof(Carrier))).ValidateDataAnnotations();
+            services.AddOptions<List<Carrier>>().Bind(Configuration.GetSection(nameof(Carrier)))
+                .ValidateDataAnnotations();
             services.AddHttpClient();
             services.AddServices();
+            services.AddLocalization();
+            services.AddRequestLocalization(o =>
+            {
+                o.DefaultRequestCulture = new RequestCulture("ru-RU");
+                o.ApplyCurrentCultureToResponseHeaders = true;
+                o.SupportedCultures = new List<CultureInfo>()
+                {
+                    new CultureInfo("ru-RU"),
+                    new CultureInfo("kk-KZ")
+                };
+                o.SupportedUICultures = new List<CultureInfo>()
+                {
+                    new CultureInfo("ru-RU"),
+                    new CultureInfo("kk-KZ")
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +65,8 @@ namespace MobileBalanceHandler
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MobileBalanceHandler v1"));
             }
 
+            app.UseRequestLocalization();
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
