@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tele2Service", "Tele2Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AltelService", "AltelService\AltelService.csproj", "{56AF0FD0-6DD3-4BBE-8837-435DECD98AD4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MobileBalanceHandlerTests", "MobileBalanceHandlerTests\MobileBalanceHandlerTests.csproj", "{34864455-4A52-449A-8F98-47C9FC80E54F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +38,9 @@ Global
 		{56AF0FD0-6DD3-4BBE-8837-435DECD98AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56AF0FD0-6DD3-4BBE-8837-435DECD98AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56AF0FD0-6DD3-4BBE-8837-435DECD98AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34864455-4A52-449A-8F98-47C9FC80E54F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34864455-4A52-449A-8F98-47C9FC80E54F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34864455-4A52-449A-8F98-47C9FC80E54F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34864455-4A52-449A-8F98-47C9FC80E54F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
