@@ -35,8 +35,7 @@ namespace MobileBalanceHandler.Controllers
                     InfoLogger.Info($"Платеж по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} c request id: {HttpContext.Response.Headers["RequestId"]} принят в обработку");
                     return Ok($"Платеж по номеру {paymentData.PhoneNumber} на сумму {paymentData.Sum} тенге принят в обработку!");
                 }
-
-                ErrorLogger.Info($"Возникла следующая ошибка: {await result.Content.ReadAsStringAsync()} по запросу с request id: {HttpContext.Response.Headers["RequestId"]}");
+                
                 return BadRequest(await result.Content.ReadAsStringAsync());
             }
             catch (Exception e)
