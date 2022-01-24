@@ -26,4 +26,7 @@
     <data name="failedRequest" xml:space="preserve">
         <value>Қате пайда болған соң сұраныс сәтті жіберілмеді</value>
     </data>
+    <data name="exceptionMessage" xml:space="preserve">
+        <value>Кешірім сұраймыз, себебі күтпеген қате пайда болды</value>
+    </data>
 </root>

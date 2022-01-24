@@ -61,6 +61,15 @@ namespace MobileBalanceHandler.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Возникла непредвиденная ошибка, приносим извинения!.
+        /// </summary>
+        internal static string exceptionMessage {
+            get {
+                return ResourceManager.GetString("exceptionMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Возникла ошибка, запрос не был отправлен успешно.
         /// </summary>
         internal static string failedRequest {

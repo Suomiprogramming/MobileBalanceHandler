@@ -132,4 +132,7 @@
   <data name="failedRequest" xml:space="preserve">
     <value>Возникла ошибка, запрос не был отправлен успешно</value>
   </data>
+  <data name="exceptionMessage" xml:space="preserve">
+    <value>Возникла непредвиденная ошибка, приносим извинения!</value>
+  </data>
 </root>

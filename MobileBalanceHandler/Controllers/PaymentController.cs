@@ -49,7 +49,7 @@ namespace MobileBalanceHandler.Controllers
             {
                 ErrorLogger.Error(
                     $"При пополнении по номеру: {paymentData.PhoneNumber} на сумму: {paymentData.Sum} с c request id: {HttpContext.Response.Headers["RequestId"]} возникло исключение: {e.Message}");
-                return BadRequest("Возникла непредвиденная ошибка, приносим извинения!");
+                return BadRequest(_localizer.GetString("exceptionMessage").Value);
             }
         }
     }
